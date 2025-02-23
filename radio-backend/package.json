@@ -1,0 +1,34 @@
+{
+  "name": "radio-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon --experimental-specifier-resolution=node src/index.js",
+    "start": "node --experimental-specifier-resolution=node src/index.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "NODE_ENV=test jest --watchAll"
+  },
+  "dependencies": {
+    "express": "^latest",
+    "dotenv": "^latest",
+    "pg": "^latest",
+    "cors": "^latest",
+    "helmet": "^latest",
+    "jsonwebtoken": "^latest",
+    "winston": "^latest",
+    "morgan": "^latest",
+    "joi": "^latest",
+    "uuid": "^latest",
+    "bcryptjs": "^latest"
+  },
+  "devDependencies": {
+    "nodemon": "^latest",
+    "eslint": "^latest",
+    "prettier": "^latest",
+    "jest": "^latest",
+    "supertest": "^latest",
+    "@types/node": "^latest",
+    "@types/express": "^latest"
+  }
+}
