@@ -13,12 +13,12 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
-    "prettier/prettier": "error",
-    "no-process-exit": "error",
-    "no-return-await": "error",
-    "no-await-in-loop": "warn",
-    "no-multiple-empty-lines": ["error", { "max": 1 }]
+    "no-console": ["warn", { "allow": ["warn", "error"] }], // Permite console.warn e console.error
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }], // Ignora variáveis iniciadas com _
+    "prettier/prettier": "error", // Erro para problemas de formatação do Prettier
+    "no-process-exit": "error", // Proíbe o uso de process.exit()
+    "no-return-await": "error", // Proíbe return await
+    "no-await-in-loop": "warn", // Aviso para await em loops
+    "no-multiple-empty-lines": ["error", { "max": 1 }] // Máximo de uma linha vazia consecutiva
   }
 }

@@ -5,6 +5,10 @@ import { logger } from './utils/logger.js';
 const PORT = process.env.PORT || 4000;
 let server;
 
+/**
+ * Verifica a conexão com o banco de dados.
+ * @throws {Error} Se a conexão falhar.
+ */
 async function checkDatabaseConnection() {
   try {
     await pool.query('SELECT NOW()');
@@ -15,10 +19,13 @@ async function checkDatabaseConnection() {
   }
 }
 
+/**
+ * Inicia o servidor HTTP.
+ */
 async function startServer() {
   try {
     await checkDatabaseConnection();
-    
+
     server = app.listen(PORT, () => {
       logger.info(`🚀 Servidor rodando na porta ${PORT} (${process.env.NODE_ENV})`);
     });
@@ -30,40 +37,19 @@ async function startServer() {
   }
 }
 
+/**
+ * Configura o graceful shutdown para sinais de término e exceções.
+ */
 function setupGracefulShutdown() {
-  // Tratamento de sinais de término
   const signals = ['SIGTERM', 'SIGINT'];
-  
+
   signals.forEach((signal) => {
     process.on(signal, async () => {
       logger.info(`${signal} recebido. Iniciando graceful shutdown...`);
-      
-      // Parar de aceitar novas conexões
-      server.close(async () => {
-        logger.info('Servidor HTTP fechado');
-        
-        try {
-          // Fechar pool de conexões do banco
-          await pool.end();
-          logger.info('Pool de conexões do banco fechado');
-          
-          logger.info('Processo finalizado com sucesso');
-          process.exit(0);
-        } catch (err) {
-          logger.error('Erro durante shutdown:', err);
-          process.exit(1);
-        }
-      });
-
-      // Se o servidor não fechar em 10s, forçar saída
-      setTimeout(() => {
-        logger.error('Timeout durante shutdown, forçando saída');
-        process.exit(1);
-      }, 10000);
+      await gracefulShutdown();
     });
   });
 
-  // Tratamento de exceções não capturadas
   process.on('uncaughtException', (err) => {
     logger.error('Exceção não capturada:', err);
     gracefulShutdown(1);
@@ -75,15 +61,21 @@ function setupGracefulShutdown() {
   });
 }
 
+/**
+ * Realiza o graceful shutdown do servidor e pool de conexões.
+ * @param {number} exitCode - Código de saída do processo.
+ */
 async function gracefulShutdown(exitCode = 0) {
   try {
     if (server) {
       await new Promise((resolve) => server.close(resolve));
       logger.info('Servidor HTTP fechado');
     }
-    
-    await pool.end();
-    logger.info('Pool de conexões do banco fechado');
+
+    if (pool) {
+      await pool.end();
+      logger.info('Pool de conexões do banco fechado');
+    }
   } catch (err) {
     logger.error('Erro durante shutdown:', err);
     exitCode = 1;

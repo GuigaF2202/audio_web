@@ -1,5 +1,8 @@
 import pg from 'pg';
 import winston from 'winston';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pg;
 
@@ -10,23 +13,20 @@ const logger = winston.createLogger({
     winston.format.timestamp(),
     winston.format.json()
   ),
-  transports: [new winston.transports.Console()]
+  transports: [new winston.transports.Console()],
 });
 
-export const pool = new Pool({
+// Configuração da pool do PostgreSQL
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { 
-    rejectUnauthorized: true,
-    ca: Buffer.from(process.env.DB_SSL_CERT, 'base64').toString('ascii')
-  } : false,
-  max: 20,
-  connectionTimeoutMillis: 5000,
-  idleTimeoutMillis: 30000
+  ssl: process.env.NODE_ENV === 'test' ? { rejectUnauthorized: false } : undefined,
 });
 
+// Eventos da pool
 pool.on('connect', () => logger.info('Nova conexão com o banco de dados'));
 pool.on('error', (err) => logger.error('Erro na pool do PostgreSQL:', err));
 
+// Função para executar queries
 export const query = async (text, params) => {
   const start = Date.now();
   try {
@@ -34,14 +34,32 @@ export const query = async (text, params) => {
     const duration = Date.now() - start;
     logger.debug(`Query executada: ${text}`, {
       duration: `${duration}ms`,
-      parameters: params
+      parameters: params,
     });
     return res;
   } catch (err) {
     logger.error(`Erro na query: ${text}`, {
       error: err.message,
-      stack: err.stack
+      stack: err.stack,
     });
     throw err;
   }
+};
+
+// Função para fechar a pool
+export const closePool = async () => {
+  try {
+    await pool.end();
+    logger.info('Pool do PostgreSQL fechada com sucesso');
+  } catch (err) {
+    logger.error('Erro ao fechar a pool do PostgreSQL:', err);
+    throw err;
+  }
+};
+
+// Exportar a pool e funções para uso em outros módulos
+export default {
+  query,
+  closePool,
+  pool,
 };

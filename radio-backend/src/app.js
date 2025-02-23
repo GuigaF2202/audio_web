@@ -3,6 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import 'dotenv/config';
+import rateLimit from 'express-rate-limit';
+import usersRouter from './routes/users.js';
 
 const app = express();
 
@@ -53,8 +55,8 @@ app.use(morgan('combined', {
   skip: (req, res) => req.path === '/health' // Não loga health checks
 }));
 
-// Configuração para confiar no proxy do Cloudflare
-app.set('trust proxy', true);
+// Configuração para confiar no proxy do Cloudflare (ajustado para ser mais seguro)
+app.set('trust proxy', 1); // Confia apenas no primeiro proxy
 
 // Middleware para capturar IP real através do Cloudflare
 app.use((req, res, next) => {
@@ -63,8 +65,6 @@ app.use((req, res, next) => {
 });
 
 // Rate Limiting básico
-import rateLimit from 'express-rate-limit';
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 100, // limite por IP
@@ -78,10 +78,26 @@ app.use(limiter);
 
 // Middleware de timeout
 app.use((req, res, next) => {
-  res.setTimeout(30000, () => {
-    res.status(408).send('Request Timeout');
+  req.setTimeout(30000, () => {
+    if (!res.headersSent) {
+      res.status(408).send('Request Timeout');
+    }
   });
   next();
+});
+
+// Rota lenta para teste de timeout
+app.get('/slow-route', (req, res) => {
+  setTimeout(() => {
+    if (!res.headersSent) {
+      res.send('Esta rota é lenta');
+    }
+  }, 40000); // 40 segundos
+});
+
+// Rota para simular erro interno
+app.get('/error-route', (req, res, next) => {
+  next(new Error('Erro interno do servidor'));
 });
 
 // Health Check aprimorado
@@ -100,6 +116,9 @@ app.get('/health', (req, res) => {
   
   res.status(200).json(healthCheck);
 });
+
+// Rotas de API
+app.use('/api/users', usersRouter);
 
 // Error Handling Global
 app.use((err, req, res, next) => {
