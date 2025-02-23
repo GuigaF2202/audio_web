@@ -1,16 +1,24 @@
 {
-  "extends": ["eslint:recommended", "prettier"],
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module"
-  },
   "env": {
     "node": true,
-    "es2021": true
+    "es2023": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2023,
+    "sourceType": "module"
   },
   "rules": {
-    "no-console": "warn",
-    "semi": ["error", "never"],
-    "quotes": ["error", "single"]
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "prettier/prettier": "error",
+    "no-process-exit": "error",
+    "no-return-await": "error",
+    "no-await-in-loop": "warn",
+    "no-multiple-empty-lines": ["error", { "max": 1 }]
   }
 }
