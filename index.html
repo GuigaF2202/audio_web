@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/android-chrome-192x192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Streama - Áudio impecável para sua rádio. Qualidade HD garantida, sem travamentos ou interrupções." />
+    <meta name="theme-color" content="#E91E63" />
+    
+    <!-- Prevenir flash de tema -->
+    <script>
+      (function() {
+        // Verificar preferência salva no localStorage
+        const savedTheme = localStorage.getItem('theme');
+        // Verificar preferência do sistema
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Decidir qual tema aplicar
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://streama.com.br/" />
+    <meta property="og:title" content="Streama | Áudio impecável para sua rádio" />
+    <meta property="og:description" content="Qualidade HD garantida, sem travamentos ou interrupções. Servidores parrudo no Brasil." />
+    <meta property="og:image" content="/assets/og-image.jpeg" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://streama.com.br/" />
+    <meta property="twitter:title" content="Streama | Áudio impecável para sua rádio" />
+    <meta property="twitter:description" content="Qualidade HD garantida, sem travamentos ou interrupções. Servidores parrudo no Brasil." />
+    <meta property="twitter:image" content="/assets/og-image.jpeg" />
+    
+    <title>Streama | Áudio impecável para sua rádio</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Desregistrar service workers problemáticos e registrar o novo
+      if ('serviceWorker' in navigator) {
+        // Primeiro, desregistrar qualquer service worker existente
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (let registration of registrations) {
+            registration.unregister();
+            console.log('Service worker desregistrado com sucesso');
+          }
+          
+          // Depois, registrar o novo service worker corrigido
+          navigator.serviceWorker.register('/service-worker-fix.js')
+            .then(registration => {
+              console.log('Service worker registrado com sucesso:', registration.scope);
+            })
+            .catch(error => {
+              console.error('Erro ao registrar o service worker:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html> 

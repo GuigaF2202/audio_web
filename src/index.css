@@ -1,0 +1,250 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  body {
+    @apply font-inter text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-900 transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-streama-gradient-short text-white font-medium px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-audio-pink focus:ring-opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-audio-pink border border-audio-pink font-medium px-6 py-2 rounded-full hover:bg-audio-pink hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-audio-pink focus:ring-opacity-50;
+  }
+  
+  .input-primary {
+    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-audio-pink dark:bg-gray-800 transition-all duration-300;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700;
+  }
+  
+  .input {
+    @apply bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-audio-pink;
+  }
+  
+  .bg-pattern {
+    @apply bg-white dark:bg-gray-900;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23e91e63' fill-opacity='0.05'%3E%3Cpath d='M0 0h100v100H0z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  
+  .btn-glow {
+    @apply hover:shadow-[0_0_15px_rgba(233,30,99,0.5)] transition-shadow duration-300;
+  }
+  
+  .audio-card {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 hover:scale-[1.02];
+  }
+  
+  /* Estilo para o gradiente de texto - atualizado com novas cores */
+  .text-gradient {
+    background: linear-gradient(135deg, #E91E63 0%, #8E24AA 50%, #1E88E5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  /* Estilo para o botão de reprodução com gradiente */
+  .play-button {
+    @apply bg-streama-gradient-short text-white rounded-full p-3 transition-all hover:opacity-90;
+  }
+  
+  /* Estilo para o botão de toggle de tema */
+  .theme-toggle-btn {
+    @apply relative overflow-hidden bg-white bg-opacity-20 p-2 rounded-full transition-all duration-300 transform hover:scale-110 focus:outline-none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Efeito hover para o botão de tema */
+  .theme-toggle-btn:hover {
+    @apply bg-opacity-30;
+    box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.2), 0 0 10px rgba(233, 30, 99, 0.2);
+  }
+  
+  /* Efeito pressionado para o botão de tema */
+  .theme-toggle-btn:active {
+    @apply scale-95;
+  }
+  
+  /* Animação para os ícones de sol e lua */
+  .theme-icon {
+    @apply transition-all duration-300 transform;
+  }
+  
+  .theme-toggle-btn:hover .theme-icon {
+    @apply scale-110 rotate-12;
+  }
+  
+  /* Estilos específicos para o toggle de tema com Framer Motion */
+  .theme-toggle-framer {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .theme-toggle-framer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px rgba(233, 30, 99, 0.15);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .theme-toggle-framer:hover::after {
+    opacity: 1;
+  }
+  
+  /* Animação de pulso suave para o botão de tema */
+  @keyframes gentle-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.2); }
+    50% { transform: scale(1.03); box-shadow: 0 0 0 5px rgba(233, 30, 99, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+  }
+  
+  .theme-toggle-framer.pulse {
+    animation: gentle-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  
+  /* Animação suave ao carregar o tema */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: all 0.3s ease !important;
+    transition-delay: 0 !important;
+  }
+}
+
+/* Animação de fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  @apply animate-[fadeIn_0.3s_ease-in-out];
+}
+
+/* Estilos específicos para o logo */
+.logo-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.logo-image {
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo-container:hover .logo-image {
+  transform: scale(1.05);
+}
+
+/* Efeito de brilho para o logo */
+.logo-glow {
+  position: relative;
+}
+
+.logo-glow::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(233,30,99,0.3) 0%, rgba(142,36,170,0.3) 50%, rgba(0,0,0,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.logo-glow:hover::after {
+  opacity: 1;
+}
+
+/* Animações para troca de tema */
+@keyframes rotateIn {
+  from { transform: rotate(-180deg); opacity: 0; }
+  to { transform: rotate(0); opacity: 1; }
+}
+
+.rotate-in {
+  animation: rotateIn 0.5s ease forwards;
+}
+
+/* Transições para o modo escuro */
+.dark .dark-transition {
+  transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Efeito de ripple para botões */
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(233, 30, 99, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.ripple-effect:focus:not(:active)::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(40, 40);
+    opacity: 0;
+  }
+}
